@@ -3,10 +3,11 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+
 import 'main.dart';
 
-class MyRay extends StatelessWidget {
-  const MyRay({super.key});
+class myRay extends StatelessWidget {
+  const myRay({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,16 +27,17 @@ class Ray extends StatefulWidget {
 
 class _RayState extends State<Ray> {
   File? image;
-  final imagepicker = ImagePicker();
+  late final imagepicker = ImagePicker();
   bool isImageSelected = false;
   String predictionResult = "";
 
-  uploadImage() async {
+  uploadGallery() async {
     setState(() {
       isImageSelected = true;
       predictionResult = "Loading";
     });
-    var pickedImage = await ImagePicker().pickImage(source: ImageSource.camera);
+    var pickedImage =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
 
     if (pickedImage != null) {
       setState(() {
@@ -61,6 +63,7 @@ class _RayState extends State<Ray> {
       body: json.encode(body),
     );
 
+    // parse the response and get the prediction result
     final Map<String, dynamic> prediction =
         json.decode(response.body)['prediction'];
     setState(() {
@@ -144,9 +147,9 @@ class _RayState extends State<Ray> {
           if (!isImageSelected)
             Center(
               child: ElevatedButton(
-                onPressed: uploadImage,
+                onPressed: uploadGallery,
                 child: Text(
-                  'X_Ray from Camera',
+                  'X_Ray from Gallery',
                   style: TextStyle(
                       fontSize: 20,
                       color: Colors.white,
@@ -177,13 +180,14 @@ class _RayState extends State<Ray> {
           if (image != null)
             Center(
               child: ElevatedButton(
-                onPressed: uploadImage,
+                onPressed: uploadGallery,
                 child: Text(
-                  'New X-Ray',
+                  'New X-Ray ',
                   style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w400),
+                    fontSize: 20,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
                 style: ElevatedButton.styleFrom(
                     primary: Colors.blue,
